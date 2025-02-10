@@ -1,4 +1,5 @@
 import express from "express";
+import rateLimit from "express-rate-limit";
 import logger from "./middlewares/logger.middleware.js";
 import { errorHandler, CustomError } from "./middlewares/error.middleware.js";
 import { testConnection } from "./database/database.js";
@@ -10,6 +11,14 @@ export const app = express();
 app.use(logger); // Simple Logger to see requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Rate Limiting Middleware
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  message: "Too many requests from this IP, please try again after 15 minutes",
+});
+app.use(limiter);
 
 // Create API v1 Router
 const apiV1Router = express.Router();
