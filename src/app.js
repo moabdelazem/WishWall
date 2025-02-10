@@ -2,6 +2,7 @@ import express from "express";
 import logger from "./middlewares/logger.middleware.js";
 import { errorHandler, CustomError } from "./middlewares/error.middleware.js";
 import { testConnection } from "./database/database.js";
+import wishRouter from "./routes/wish.route.js";
 
 export const app = express();
 
@@ -27,12 +28,8 @@ apiV1Router.get("/health", async (req, res, next) => {
   }
 });
 
-// Add routes to API v1 Router
-apiV1Router.get("/", (req, res) => {
-  res.json({
-    message: "This is Fucking API",
-  });
-});
+// Mount wishes router
+apiV1Router.use("/wishes", wishRouter);
 
 // Mount API v1 router
 app.use("/api/v1", apiV1Router);
