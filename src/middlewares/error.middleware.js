@@ -26,6 +26,13 @@ const errorHandler = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message;
 
+    // Handle Zod validation errors
+    if (err.name === "ZodError") {
+      const zodErrors = err.errors.map((error) => error.message);
+      error.statusCode = 400;
+      error.message = zodErrors.join(", ");
+    }
+
     const statusCode = error.statusCode || 500;
     const message = error.message || "Internal Server Error";
 
