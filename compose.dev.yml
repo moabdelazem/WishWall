@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16
+    container_name: wishwall_db_dev
+    environment:
+      POSTGRES_USER: wishwall_user
+      POSTGRES_DB: wishwall_dev
+      POSTGRES_PASSWORD: password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - wishwall_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wishwall_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  wishwall_postgres_data:
+
