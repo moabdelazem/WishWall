@@ -1,6 +1,11 @@
 import { Router } from "express";
 import { getWishes, createWish } from "../controllers/wish.controller.js";
+import { validate } from "../middlewares/validate.middleware.js";
+import { createWishSchema } from "../schemas/wish.schema.js";
 
-const wishRouter = Router().get("/", getWishes).post("/", createWish);
+const router = Router();
 
-export default wishRouter;
+router.get("/", getWishes);
+router.post("/", validate(createWishSchema), createWish);
+
+export default router;
